@@ -183,8 +183,8 @@ export default function KanbanBoard() {
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-[10px] font-bitcount mb-2">
-                  <span className="bg-zinc-800 text-blue-400 px-2 py-1 rounded">Automation</span>
-                  <span className="bg-zinc-800 text-blue-400 px-2 py-1 rounded">MS Teams</span>
+                  <span className="bg-zinc-800 text-blue-400 px-2 py-1 rounded">PM</span>
+                  <span className="bg-zinc-800 text-blue-400 px-2 py-1 rounded">IT Coordinator</span>
                   <span className="bg-zinc-800 text-amber-400 px-2 py-1 rounded">Awarded Q4</span>
                 </div>
 
@@ -196,7 +196,7 @@ export default function KanbanBoard() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden text-xs text-zinc-300 space-y-2 pt-2 border-t border-zinc-800 mt-2 architecture-details"
                     >
-                      <p>• Streamlined complex department workflows by integrating core platform automations, including custom Jira updates and InTime scheduling optimizations.</p>
+                      <p>• Acting as the primary IT liaison between multiple stakeholders for translating technical requirements into actionable workflow goals.</p>
                       <p>• Commanded end-to-end technical execution for facility technology rollouts, including a 500-user MS Teams transition and domain migration.</p>
                       <p>• Administered and troubleshot complex standalone software applications to maximize system uptime and maintain mission-critical facility performance.</p>
                       <p>• Managed tier-1 technical operations and hardware provisioning for high-stakes routing, network infrastructure, and specialized security systems.</p>

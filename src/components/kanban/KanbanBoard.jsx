@@ -395,7 +395,7 @@ export default function KanbanBoard() {
         
         {/* Sun City Connect Orb */}
         <motion.a
-          href="suncityconnect.com" 
+          href="https://suncityconnect.com" 
           target="_blank"
           rel="noopener noreferrer"
           animate={{ y: [0, -8, 0] }}
@@ -414,7 +414,7 @@ export default function KanbanBoard() {
 
         {/* TapTap Social Orb */}
         <motion.a
-          href="join.get-taptap.com"
+          href="https://join.get-taptap.com"
           target="_blank"
           rel="noopener noreferrer"
           animate={{ y: [0, -8, 0] }}

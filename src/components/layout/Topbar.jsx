@@ -12,7 +12,7 @@ export default function Topbar() {
         </h1>
         <span className="text-zinc-600">|</span>
         <span className="font-bitcount text-xs text-zinc-400 tracking-widest uppercase">
-          Automation_Architect
+          Click my picture below to interview me!
         </span>
       </div>
 

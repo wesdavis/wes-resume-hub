@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
+import { X, Send, Mic } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import wesPhoto from './WesOld-photoroom.png'; // adjust the import path if needed
 
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
-// This is the brain of your agent. It tells Gemini how to act.
 const SYSTEM_PROMPT = `
 You are the personal AI Assistant and interactive resume for Wes Davis, a highly accomplished Technical Product Manager and Automation Architect based in El Paso, Texas.
 Your job is to answer questions from recruiters and hiring managers about Wes's experience, technical skills, and career goals.
 Your tone must be concise, professional, confident, and highly knowledgeable about his background. 
+Keep your responses relatively brief, as they will be spoken aloud via text-to-speech.
 
 Here is Wes's detailed background:
 
@@ -20,25 +21,21 @@ CORE PROFILE:
 - Wes likes to BBQ and is a fan of the Dallas Cowboys. He is married and has a 7 year old son.
 
 CURRENT VENTURES & TECHNICAL PROJECTS (DuckNutz LLC | Jan 2026 - Present):
-- Sun City Connect (AI Automation Platform): Wes architected and deployed an AI-powered CRM command center. He integrated Meta Graph APIs to deploy automated AI sales assistants for Facebook and Instagram, and engineered a lead management vault that autonomously pre-qualifies prospects and books appointments in under three seconds.
-- TapTap Social (Mobile Application): Wes directed the technical execution and product management of this location-based mobile app, successfully launching V1.0 on the Apple App Store and Google Play. He built scalable backend infrastructure using Supabase and PostgreSQL (handling real-time notifications and location services) and automated database enrichment using Google Maps APIs.
--Wes used Ai to automate the entire customer support workflow for both ventures, integrating Gemini-powered chatbots that handle inquiries, troubleshoot issues, and provide instant responses 24/7.
+- Sun City Connect (AI Automation Platform): Architected and deployed an AI-powered CRM command center. Integrated Meta Graph APIs to deploy automated AI sales assistants.
+- TapTap Social (Mobile Application): Directed technical execution, launching V1.0 on the App Store and Google Play. Built scalable backend infrastructure using Supabase and PostgreSQL.
 
 CURRENT ENTERPRISE ROLE (El Paso County Sheriff's Office | Aug 2023 - Present):
-- Role: IT Project Coordinator. He serves as the primary IT liaison translating technical requirements into actionable workflow goals.
-- Key Achievements: 
-  * Cross-Functional Leadership: Serve as the primary IT liaison for the Sheriff’s Office, translating technical requirements into actionable project goals for internal departments and external vendors.
-  * Infrastructure Implementation: Lead the end-to-end planning and execution of facility-wide technology upgrades, including hardware provisioning and software deployment for mission-critical conference and operations centers.
-  * Mission-Critical Support: Manage Tier I technical operations for security-focused hardware, including Bosch CC Security cameras, intercom systems, and panel PCs, ensuring zero-latency communication.
-  * User Adoption & Training: Design and deliver comprehensive training programs for jail staff, increasing technical proficiency and reducing system-related downtime.
-  * Asset Lifecycle Management: Direct the inventory and auditing of all IT equipment, ensuring resource optimization and budget compliance.
-  * Awarded Civilian of the Quarter (2025 Q4) for outstanding technical project coordination.
+- Role: IT Project Coordinator. Primary IT liaison translating technical requirements into actionable workflow goals.
+- I assist the staff with a wide range of technical needs, from troubleshooting software issues to implementing new systems. I also lead the planning and execution of technology upgrades across the facility, ensuring that all projects are completed on time and within budget.
+- I once brought down central control which instigated a total facility Lockdown. I wanted to restart the system to try to allivate some slowness but I accidentally caused a full system crash. It was a stressful day but I learned a lot about the fragility of legacy systems and the importance of careful change management.
+-I work with a bunch of cops. Nice people but also the least tech savvy group of users imaginable. Lots of training and hand holding required to get them to adopt new tools and processes. It's a challenge but I enjoy the opportunity to make a real impact on their day-to-day work.
+-I manage vendors and other departments in not only software but also infastructure projects. Recently did some low voltage wiring for new access points and cameras. Not exactly in the job description but I like to get hands on and learn new skills whenever I can.
+-why am i looking to leave? I really love everyone I work with at the Sheriff's Office. I came from north texas and they made me feel really welcome here. I'm looking for a more technical role that will allow me to leverage my skills and experience to their fullest potential. I'm also looking for a role that will allow me to work remotely, because ultimately I want to be able to spend more time with my family and have the flexibility to work from anywhere.
+- Key Achievements: Lead end-to-end planning of facility-wide technology upgrades. Awarded Civilian of the Quarter (2025 Q4).
 
 PAST EXPERIENCE:
 - Trane (Assistant Project Manager | Dec 2022 - Aug 2023): Managed commercial HVAC/chiller projects, overseeing planning, scheduling, budgeting, and Kanban workflows.
-- at Trane he did Cross-Functional Collaboration: Coordinated with engineers, technicians, and subcontractors to ensure timely and budget-conscious delivery of commercial HVAC projects.
 - Axcent Networks (Technical Project Coordinator | Sep 2019 - Dec 2022): Managed the lifecycle of telecommunications circuit provisioning (ASRs) for AT&T and T-Mobile cell towers.
-- at Axcent Networks he mainly did Telecom Provisioning: Managed the end-to-end provisioning of telecommunications circuits for AT&T and T-Mobile, specializing in Access Service Requests (ASRs). Utlizing project management tools like Jira and Kanban boards to track progress and ensure timely delivery.
 
 EDUCATION & SKILLS:
 - Education: Bachelor of Science in Integrated Studies (University of North Texas). Associate of Science (Dallas College).
@@ -46,155 +43,173 @@ EDUCATION & SKILLS:
 
 RULES FOR THE AI:
 - If asked about his availability or location: Wes is currently based in El Paso, TX, but is seeking a 100% remote role.
-- If someone asks a highly specific technical, personal, or pricing question you don't know the answer to, DO NOT hallucinate. Politely direct them to email Wes directly at westleyhdavis@gmail.com or call him at 214-592-2073.
+- If someone asks a highly specific technical, personal, or pricing question you don't know the answer to, DO NOT hallucinate. Politely direct them to email you directly at westleyhdavis@gmail.com.
 `;
+
+// Initialize the model with the System Prompt built-in
+const model = genAI.getGenerativeModel({ 
+  model: "gemini-3.5-flash",
+  systemInstruction: SYSTEM_PROMPT
+});
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { id: 1, text: "System Online. I am Wes's AI Assistant powered by Gemini. Ask me about his work with AI automation, React, or enterprise infrastructure.", sender: 'bot' }
-  ]);
   const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef(null);
+  const [isThinking, setIsThinking] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [responseText, setResponseText] = useState('');
 
-  // Auto-scroll to the newest message
+  const audioRef = useRef(null);
+
+  // Clean up audio blob URLs on unmount
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+    return () => {
+      if (audioRef.current && audioRef.current.src) {
+        URL.revokeObjectURL(audioRef.current.src);
+      }
+    };
+  }, []);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
     const userText = inputValue;
-    
-    // Add user message to UI
-    const userMsg = { id: Date.now(), text: userText, sender: 'user' };
-    setMessages(prev => [...prev, userMsg]);
     setInputValue('');
-    setIsTyping(true);
+    setIsThinking(true);
 
     try {
-      // Call Gemini 3.5 Flash API
-      const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
-      
-      // Combine system prompt with the user's question for context
-      const prompt = `${SYSTEM_PROMPT}\n\nUser Question: ${userText}\n\nAI Response:`;
-      
-      const result = await model.generateContent(prompt);
-      const responseText = result.response.text();
+      // 1. Fetch text from Gemini
+      const result = await model.generateContent(userText);
+      const text = result.response.text();
+      setResponseText(text);
 
-      // Add Gemini's response to UI
-      const botMsg = { 
-        id: Date.now() + 1, 
-        text: responseText, 
-        sender: 'bot' 
-      };
-      setMessages(prev => [...prev, botMsg]);
-
+      // 2. Pipe text to ElevenLabs TTS
+      await generateAndPlaySpeech(text);
     } catch (error) {
-      console.error("Gemini API Error:", error);
-      const errorMsg = { 
-        id: Date.now() + 1, 
-        text: "System Error: Connection to Gemini API failed. Please ensure the API key is configured properly in the .env file.", 
-        sender: 'bot' 
+      console.error("Pipeline Error:", error);
+      setIsThinking(false);
+      setResponseText('');
+    }
+  };
+
+  const generateAndPlaySpeech = async (text) => {
+    const voiceId = import.meta.env.VITE_ELEVENLABS_VOICE_ID;
+    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
+
+    try {
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'audio/mpeg',
+            'xi-api-key': apiKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: text,
+            model_id: 'eleven_turbo_v2_5',
+            voice_settings: {
+              stability: 0.75,       // more consistent delivery
+              similarity_boost: 0.85, // sticks closer to your cloned voice
+            },
+          }),
+        }
+      );
+
+      if (response.status === 402) throw new Error('QUOTA_EXCEEDED');
+      if (!response.ok) throw new Error('ElevenLabs API connection failed');
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onplay = () => {
+        setIsThinking(false);
+        setIsSpeaking(true);
       };
-      setMessages(prev => [...prev, errorMsg]);
-    } finally {
-      setIsTyping(false);
+
+      audio.onended = () => {
+        setIsSpeaking(false);
+        setResponseText(''); // hide speech bubble when done
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      await audio.play();
+    } catch (error) {
+      console.error('Audio Generation Failed:', error);
+      setIsThinking(false);
+      setIsSpeaking(false);
+      setResponseText('');
+      if (error.message === 'QUOTA_EXCEEDED') {
+        alert(
+          "System Notice: Voice synthesizer quota exceeded. Wes has clearly been getting a lot of traffic! Please reach out to him via email to continue the conversation."
+        );
+      }
     }
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+      
+      {/* Expanded Panel (Photo + Speech Bubble + Input) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, x: 20, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-16 right-0 w-80 md:w-96 bg-zinc-950 border border-zinc-800 rounded-lg shadow-2xl flex flex-col overflow-hidden"
-            style={{ height: '500px' }}
+            className="w-80 md:w-96 bg-zinc-950 border border-emerald-500/30 rounded-lg shadow-[0_0_20px_rgba(16,185,129,0.15)] relative"
           >
-            {/* Header */}
-            <div className="bg-zinc-900 border-b border-zinc-800 p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-emerald-500/20 p-2 rounded-lg text-emerald-400">
-                  <Bot size={20} />
-                </div>
-                <div>
-                  <h3 className="font-bitcount text-sm text-zinc-100 tracking-wider">WES_AI_AGENT</h3>
-                  <p className="text-[10px] text-emerald-400 font-bitcount flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    POWERED BY GEMINI
-                  </p>
-                </div>
+            {/* Photo area – clipping only the image for rounded top corners */}
+            <div className="relative">
+              <div className="overflow-hidden rounded-t-lg">
+                <img
+                  src={wesPhoto}
+                  alt="Wes Davis"
+                  className="w-full h-auto object-cover"
+                />
               </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="text-zinc-500 hover:text-zinc-300 transition-colors"
-              >
-                <X size={20} />
-              </button>
+
+              {/* Speech Bubble – positioned outside to the left, NOT clipped */}
+              <AnimatePresence>
+                {isSpeaking && responseText && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -10, scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="absolute top-1/3 -left-[calc(100%+12px)] w-64 max-w-[calc(100vw-4rem)] bg-zinc-900 text-zinc-100 px-4 py-3 rounded-2xl border border-emerald-500/40 shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+                  >
+                    <p className="text-sm leading-snug">{responseText}</p>
+                    {/* Tail pointing RIGHT (toward the photo) */}
+                    <div className="absolute top-6 -right-2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-zinc-900" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Chat History */}
-            <div className="flex-grow p-4 overflow-y-auto bg-zinc-950/50 space-y-4">
-              {messages.map((msg) => (
-                <div key={msg.id} className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  {msg.sender === 'bot' && (
-                    <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center text-emerald-400 flex-shrink-0 mt-1">
-                      <Bot size={14} />
-                    </div>
-                  )}
-                  <div className={`p-3 rounded-lg max-w-[80%] text-sm whitespace-pre-wrap ${
-                    msg.sender === 'user' 
-                      ? 'bg-emerald-500/20 text-emerald-100 border border-emerald-500/30' 
-                      : 'bg-zinc-900 border border-zinc-800 text-zinc-300'
-                  }`}>
-                    {msg.text}
-                  </div>
-                  {msg.sender === 'user' && (
-                    <div className="w-6 h-6 rounded bg-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0 mt-1">
-                      <User size={14} />
-                    </div>
-                  )}
-                </div>
-              ))}
-              
-              {isTyping && (
-                <div className="flex gap-3 justify-start">
-                  <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center text-emerald-400 flex-shrink-0 mt-1">
-                    <Bot size={14} />
-                  </div>
-                  <div className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 flex gap-1 items-center">
-                    <span className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce"></span>
-                    <span className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
-                    <span className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input Area */}
-            <div className="p-4 bg-zinc-900 border-t border-zinc-800">
-              <form onSubmit={handleSendMessage} className="flex gap-2">
+            {/* Input field */}
+            <div className="p-3 bg-zinc-900 border-t border-zinc-800 rounded-b-lg">
+              <form onSubmit={handleSendMessage} className="relative">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Ask about Wes's experience..."
-                  className="flex-grow bg-zinc-950 border border-zinc-700 rounded p-2 text-sm text-zinc-100 focus:outline-none focus:border-emerald-500 transition-colors"
+                  placeholder="Ask Wes a question..."
+                  disabled={isThinking || isSpeaking}
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded py-2 pl-3 pr-10 text-sm text-zinc-100 focus:outline-none focus:border-emerald-500 transition-colors disabled:opacity-50"
                 />
-                <button 
+                <button
                   type="submit"
-                  disabled={!inputValue.trim() || isTyping}
-                  className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-950 p-2 rounded transition-colors flex items-center justify-center"
+                  disabled={!inputValue.trim() || isThinking || isSpeaking}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-300 disabled:opacity-30 transition-colors"
                 >
-                  <Send size={18} />
+                  <Send size={16} />
                 </button>
               </form>
             </div>
@@ -202,16 +217,55 @@ export default function ChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Floating Action Button */}
+      {/* Floating Avatar Orb (your photo as the button) */}
       <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.3)] flex items-center justify-center text-zinc-950 hover:bg-emerald-400 transition-colors z-50 relative"
+        animate={{
+          boxShadow: isSpeaking 
+            ? ['0px 0px 0px rgba(16,185,129,0)', '0px 0px 30px rgba(16,185,129,0.6)', '0px 0px 0px rgba(16,185,129,0)']
+            : isOpen 
+              ? '0px 0px 15px rgba(16,185,129,0.3)' 
+              : '0px 0px 0px rgba(16,185,129,0)',
+        }}
+        transition={{
+          duration: isSpeaking ? 1.2 : 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className={`relative w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all duration-300 z-50 overflow-hidden ${
+          isThinking ? 'border-amber-500 bg-amber-500/20' : 
+          isSpeaking ? 'border-emerald-400 bg-emerald-400/20' : 
+          'border-zinc-700 bg-zinc-950 hover:border-emerald-500/50 hover:bg-emerald-900/20'
+        }`}
       >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
-        {!isOpen && (
-          <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-amber-500 border-2 border-zinc-900 rounded-full animate-pulse"></span>
+        {/* Your photo */}
+        <img 
+          src={wesPhoto} 
+          alt="Wes Davis" 
+          className="w-full h-full object-cover rounded-full"
+        />
+        
+        {/* Thinking spinner overlay */}
+        {isThinking && (
+          <div className="absolute inset-0 flex items-center justify-center bg-amber-500/30 rounded-full">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              className="w-10 h-10 rounded-full border-t-2 border-r-2 border-amber-500"
+            />
+          </div>
+        )}
+        
+        {/* Speaking mic overlay */}
+        {isSpeaking && !isThinking && (
+          <div className="absolute inset-0 flex items-center justify-center bg-emerald-400/20 rounded-full">
+            <Mic className="text-emerald-400" size={28} />
+          </div>
+        )}
+        
+        {/* Idle green dot when closed */}
+        {!isOpen && !isThinking && !isSpeaking && (
+          <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-zinc-950 rounded-full animate-pulse"></span>
         )}
       </motion.button>
     </div>

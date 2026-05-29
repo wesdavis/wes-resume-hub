@@ -5,7 +5,6 @@ import sunCityLogo from './suncitylogo.png';
 import tapTapLogo from './taptaplogo.png';
 
 // --- ANIMATION VARIANTS ---
-// These handle the cascading column load effect
 const boardVariants = {
   hidden: { opacity: 0 },
   show: {
@@ -31,34 +30,31 @@ export default function KanbanBoard() {
   };
 
   return (
-    <div className="relative min-h-screen p-6 overflow-hidden">
+    <div className="relative min-h-screen p-4 md:p-6 overflow-hidden">
       
       {/* --- BACKGROUND LAYERS --- */}
-      {/* The Hacker Grid Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      
-      {/* The Vignette (fades the grid at the edges. pointer-events-none ensures it doesn't block clicks) */}
       <div className="absolute inset-0 bg-zinc-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_80%)] pointer-events-none"></div>
 
       {/* --- MAIN CONTENT --- */}
       <div className="relative z-10 max-w-screen-2xl mx-auto">
-        <div className="mb-8">
-          <h2 className="font-bitcount text-2xl text-emerald-400 tracking-widest mb-2">RESUME_BOARD</h2>
-          <p className="text-zinc-400 font-bitcount text-sm">VIEWING: WES_DAVIS_CAREER_PROGRESSION</p>
+        <div className="mb-6 md:mb-8">
+          <h2 className="font-bitcount text-xl md:text-2xl text-emerald-400 tracking-widest mb-1 md:mb-2">RESUME_BOARD</h2>
+          <p className="text-zinc-400 font-bitcount text-xs md:text-sm">VIEWING: WES_DAVIS_CAREER_PROGRESSION</p>
         </div>
 
-        {/* Animated Grid Container */}
+        {/* MOBILE CAROUSEL / DESKTOP GRID */}
         <motion.div 
           variants={boardVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-start"
+          className="flex md:grid overflow-x-auto md:overflow-visible pb-8 md:pb-0 snap-x snap-mandatory md:snap-none grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 items-start [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           
           {/* ========================================== */}
           {/* COLUMN 1: SHIPPED (EMERALD ACCENT)         */}
           {/* ========================================== */}
-          <motion.div variants={columnVariants} className="bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
+          <motion.div variants={columnVariants} className="w-[85vw] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-zinc-800">
               <div className="flex items-center gap-2 text-emerald-400 font-bitcount text-sm">
                 <CheckCircle2 size={16} />
@@ -68,14 +64,12 @@ export default function KanbanBoard() {
             </div>
             
             <div className="space-y-4">
-              {/* Sun City Connect Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => toggleCard('suncity')}
                 className="relative bg-zinc-900/80 border border-zinc-800 p-4 pl-5 rounded-lg cursor-pointer hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300 group overflow-hidden"
               >
-                {/* Cyberpunk Accent Line */}
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500/20 group-hover:bg-emerald-400 transition-colors" />
 
                 <div className="flex justify-between items-start">
@@ -109,14 +103,12 @@ export default function KanbanBoard() {
                 </AnimatePresence>
               </motion.div>
 
-              {/* TapTap Social Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => toggleCard('taptap')}
                 className="relative bg-zinc-900/80 border border-zinc-800 p-4 pl-5 rounded-lg cursor-pointer hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300 group overflow-hidden"
               >
-                {/* Cyberpunk Accent Line */}
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500/20 group-hover:bg-emerald-400 transition-colors" />
 
                 <div className="flex justify-between items-start">
@@ -156,7 +148,7 @@ export default function KanbanBoard() {
           {/* ========================================== */}
           {/* COLUMN 2: IN SPRINT (BLUE ACCENT)          */}
           {/* ========================================== */}
-          <motion.div variants={columnVariants} className="bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
+          <motion.div variants={columnVariants} className="w-[85vw] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-zinc-800">
               <div className="flex items-center gap-2 text-blue-400 font-bitcount text-sm">
                 <Clock size={16} />
@@ -213,7 +205,7 @@ export default function KanbanBoard() {
           {/* ========================================== */}
           {/* COLUMN 3: BACKLOG (ZINC ACCENT)            */}
           {/* ========================================== */}
-          <motion.div variants={columnVariants} className="bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
+          <motion.div variants={columnVariants} className="w-[85vw] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-zinc-800">
               <div className="flex items-center gap-2 text-zinc-400 font-bitcount text-sm">
                 <Archive size={16} />
@@ -223,7 +215,6 @@ export default function KanbanBoard() {
             </div>
 
             <div className="space-y-4">
-              {/* Trane Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
@@ -258,7 +249,6 @@ export default function KanbanBoard() {
                 </AnimatePresence>
               </motion.div>
               
-              {/* Axcent Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
@@ -298,7 +288,7 @@ export default function KanbanBoard() {
           {/* ========================================== */}
           {/* COLUMN 4: EDUCATION (INDIGO ACCENT)        */}
           {/* ========================================== */}
-          <motion.div variants={columnVariants} className="bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
+          <motion.div variants={columnVariants} className="w-[85vw] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-zinc-950/60 backdrop-blur-md rounded-lg border border-zinc-800/50 p-4 flex flex-col shadow-xl">
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-zinc-800">
               <div className="flex items-center gap-2 text-indigo-400 font-bitcount text-sm">
                 <GraduationCap size={16} />
@@ -308,7 +298,6 @@ export default function KanbanBoard() {
             </div>
 
             <div className="space-y-4">
-              {/* UNT Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
@@ -346,7 +335,6 @@ export default function KanbanBoard() {
                 </AnimatePresence>
               </motion.div>
               
-              {/* Dallas College Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
@@ -388,10 +376,11 @@ export default function KanbanBoard() {
 
         </motion.div>
       </div>
+      
       {/* ========================================== */}
       {/* FLOATING PROJECT ORBS (BOTTOM LEFT)        */}
       {/* ========================================== */}
-      <div className="fixed bottom-6 left-6 z-50 flex flex-col gap-4">
+      <div className="fixed bottom-6 left-4 md:left-6 z-50 flex flex-col gap-4">
         
         {/* Sun City Connect Orb */}
         <motion.a
@@ -402,12 +391,11 @@ export default function KanbanBoard() {
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="group relative flex h-14 w-14 items-center justify-center rounded-full border border-emerald-500/30 bg-zinc-950/80 shadow-[0_0_15px_rgba(16,185,129,0.15)] backdrop-blur-md transition-all hover:border-emerald-400 hover:bg-emerald-900/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+          className="group relative flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full border border-emerald-500/30 bg-zinc-950/80 shadow-[0_0_15px_rgba(16,185,129,0.15)] backdrop-blur-md transition-all hover:border-emerald-400 hover:bg-emerald-900/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
         >
-          <img src={sunCityLogo} alt="Sun City Connect Logo" className="h-8 w-8 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <img src={sunCityLogo} alt="Sun City Connect Logo" className="h-6 w-6 md:h-8 md:w-8 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
           
-          {/* Holographic Tooltip */}
-          <div className="pointer-events-none absolute left-16 top-1/2 -translate-y-1/2 rounded border border-emerald-500/30 bg-zinc-950/90 px-3 py-1.5 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 whitespace-nowrap shadow-lg">
+          <div className="pointer-events-none absolute left-14 md:left-16 top-1/2 -translate-y-1/2 rounded border border-emerald-500/30 bg-zinc-950/90 px-3 py-1.5 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 whitespace-nowrap shadow-lg">
             <p className="font-bitcount text-[10px] text-emerald-400 tracking-wider">INITIATE: SUN_CITY_CONNECT</p>
           </div>
         </motion.a>
@@ -418,16 +406,14 @@ export default function KanbanBoard() {
           target="_blank"
           rel="noopener noreferrer"
           animate={{ y: [0, -8, 0] }}
-          /* Delaying the animation slightly so they don't bob up and down at the exact same time */
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="group relative flex h-14 w-14 items-center justify-center rounded-full border border-emerald-500/30 bg-zinc-950/80 shadow-[0_0_15px_rgba(16,185,129,0.15)] backdrop-blur-md transition-all hover:border-emerald-400 hover:bg-emerald-900/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+          className="group relative flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full border border-emerald-500/30 bg-zinc-950/80 shadow-[0_0_15px_rgba(16,185,129,0.15)] backdrop-blur-md transition-all hover:border-emerald-400 hover:bg-emerald-900/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
         >
-          <img src={tapTapLogo} alt="TapTap Social Logo" className="h-8 w-8 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <img src={tapTapLogo} alt="TapTap Social Logo" className="h-6 w-6 md:h-8 md:w-8 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
           
-          {/* Holographic Tooltip */}
-          <div className="pointer-events-none absolute left-16 top-1/2 -translate-y-1/2 rounded border border-emerald-500/30 bg-zinc-950/90 px-3 py-1.5 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 whitespace-nowrap shadow-lg">
+          <div className="pointer-events-none absolute left-14 md:left-16 top-1/2 -translate-y-1/2 rounded border border-emerald-500/30 bg-zinc-950/90 px-3 py-1.5 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 whitespace-nowrap shadow-lg">
             <p className="font-bitcount text-[10px] text-emerald-400 tracking-wider">INITIATE: TAPTAP_SOCIAL</p>
           </div>
         </motion.a>

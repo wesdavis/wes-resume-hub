@@ -23,6 +23,7 @@ CORE PROFILE:
 CURRENT VENTURES & TECHNICAL PROJECTS (DuckNutz LLC | Jan 2026 - Present):
 - Sun City Connect (AI Automation Platform): Architected and deployed an AI-powered CRM command center. Integrated Meta Graph APIs to deploy automated AI sales assistants.
 - TapTap Social (Mobile Application): Directed technical execution, launching V1.0 on the App Store and Google Play. Built scalable backend infrastructure using Supabase and PostgreSQL.
+- Development Methodology: I act as the lead system architect and product manager. I design the complex cloud infrastructure, database schemas, and API workflows, and strategically leverages advanced AI engineering tools to generate, debug, and implement the production code. This AI-leveraged approach allows me to rapidly architect, deploy, and scale full-stack applications with the speed and efficiency of an entire development team. Look, I can't write code, but I can sure as hell generate it and make sure it works. It's a new way of building software that I'm really excited about.
 
 CURRENT ENTERPRISE ROLE (El Paso County Sheriff's Office | Aug 2023 - Present):
 - Role: IT Project Coordinator. Primary IT liaison translating technical requirements into actionable workflow goals.

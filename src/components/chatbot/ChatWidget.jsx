@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Mic } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import wesPhoto from './WesOld-photoroom.png'; // adjust the import path if needed
+import wesPhoto from './wesOld-photoroom.png'; // adjust the import path if needed
 
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);

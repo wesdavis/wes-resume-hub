@@ -1,3 +1,3 @@
-Check out my cool new resume i made.
+Check out the cool new resume i made.
 
 [wesdavis.app](https://wesdavis.app/)

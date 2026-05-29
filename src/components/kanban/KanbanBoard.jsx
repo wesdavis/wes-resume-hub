@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Clock, Archive, ChevronDown, ChevronUp, GraduationCap } from 'lucide-react';
+import sunCityLogo from './suncitylogo.png';
+import tapTapLogo from './taptaplogo.png';
 
 // --- ANIMATION VARIANTS ---
 // These handle the cascading column load effect
@@ -385,6 +387,51 @@ export default function KanbanBoard() {
           </motion.div>
 
         </motion.div>
+      </div>
+      {/* ========================================== */}
+      {/* FLOATING PROJECT ORBS (BOTTOM LEFT)        */}
+      {/* ========================================== */}
+      <div className="fixed bottom-6 left-6 z-50 flex flex-col gap-4">
+        
+        {/* Sun City Connect Orb */}
+        <motion.a
+          href="suncityconnect.com" 
+          target="_blank"
+          rel="noopener noreferrer"
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="group relative flex h-14 w-14 items-center justify-center rounded-full border border-emerald-500/30 bg-zinc-950/80 shadow-[0_0_15px_rgba(16,185,129,0.15)] backdrop-blur-md transition-all hover:border-emerald-400 hover:bg-emerald-900/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+        >
+          <img src={sunCityLogo} alt="Sun City Connect Logo" className="h-8 w-8 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          
+          {/* Holographic Tooltip */}
+          <div className="pointer-events-none absolute left-16 top-1/2 -translate-y-1/2 rounded border border-emerald-500/30 bg-zinc-950/90 px-3 py-1.5 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 whitespace-nowrap shadow-lg">
+            <p className="font-bitcount text-[10px] text-emerald-400 tracking-wider">INITIATE: SUN_CITY_CONNECT</p>
+          </div>
+        </motion.a>
+
+        {/* TapTap Social Orb */}
+        <motion.a
+          href="join.get-taptap.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          animate={{ y: [0, -8, 0] }}
+          /* Delaying the animation slightly so they don't bob up and down at the exact same time */
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="group relative flex h-14 w-14 items-center justify-center rounded-full border border-emerald-500/30 bg-zinc-950/80 shadow-[0_0_15px_rgba(16,185,129,0.15)] backdrop-blur-md transition-all hover:border-emerald-400 hover:bg-emerald-900/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+        >
+          <img src={tapTapLogo} alt="TapTap Social Logo" className="h-8 w-8 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          
+          {/* Holographic Tooltip */}
+          <div className="pointer-events-none absolute left-16 top-1/2 -translate-y-1/2 rounded border border-emerald-500/30 bg-zinc-950/90 px-3 py-1.5 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 whitespace-nowrap shadow-lg">
+            <p className="font-bitcount text-[10px] text-emerald-400 tracking-wider">INITIATE: TAPTAP_SOCIAL</p>
+          </div>
+        </motion.a>
+
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ function App() {
         <KanbanBoard />
       </main>
       <ChatWidget />
+      <Analytics />
     </div>
   )
 }

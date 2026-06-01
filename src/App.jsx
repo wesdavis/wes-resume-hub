@@ -1,6 +1,7 @@
 import Topbar from './components/layout/Topbar'
 import KanbanBoard from './components/kanban/KanbanBoard'
 import ChatWidget from './components/chatbot/ChatWidget'
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (

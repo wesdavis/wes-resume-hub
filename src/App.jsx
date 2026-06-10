@@ -10,7 +10,7 @@ function App() {
       <main className="animate-in fade-in duration-1000 pb-20">
         <KanbanBoard />
       </main>
-      <ChatWidget />
+      {/* <ChatWidget /> */}
     </div>
   )
 }

@@ -95,10 +95,10 @@ export default function KanbanBoard() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden text-xs text-zinc-300 space-y-2 pt-2 border-t border-zinc-800 mt-2 architecture-details"
                     >
-                      <p>• Architected and deployed an AI-powered CRM command center designed to optimize revenue operations and lead management workflows.</p>
-                      <p>• Integrated Meta Graph APIs to launch automated AI sales assistants on Facebook and Instagram, autonomously pre-qualifying leads and booking appointments in under three seconds.</p>
-                      <p>• Designed overarching system architecture leveraging automated webhooks to completely replace manual customer-acquisition pipelines.</p>
-                    </motion.div>
+                      <p>**API Integration & Automation Engineering:** Defeated the complexity of the Meta Developers Dashboard to engineer real-time webhooks connecting Instagram and Facebook Graph APIs to a custom automation pipeline.</p>
+    <p>**System Architecture:** Architected an AI-driven CRM engine capable of pre-qualifying consumer leads and triggering database events with sub-3-second latency, eliminating manual operations.</p>
+    <p>**Infrastructure:** Structured secure cloud data relays to ingest vendor webhooks, parse messy payloads, and update state seamlessly across independent third-party platforms.</p>
+  </motion.div>
                   )}
                 </AnimatePresence>
               </motion.div>
@@ -134,11 +134,11 @@ export default function KanbanBoard() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden text-xs text-zinc-300 space-y-2 pt-2 border-t border-zinc-800 mt-2 architecture-details"
                     >
-                      <p>• Directed full-lifecycle product management and technical execution to successfully launch a cross-platform app on the Apple App Store and Google Play Store.</p>
-                      <p>• Engineered scalable backend architecture using Supabase and PostgreSQL, implementing real-time notifications and proximity spatial data logic.</p>
-                      <p>• Developed serverless Deno Edge Functions and automated webhooks to process background workflows with sub-second latency.</p>
-                      <p>• Automated data pipelines via Google Maps APIs to dynamically fetch, cache, and sync geographic location metadata.</p>
-                    </motion.div>
+                      <p>**3-Month Solo Build Sprint:** Spearheaded end-to-end full-stack development, transitioning a location-based cross-platform application from concept to deployment on the Apple App Store and Google Play Store.</p>
+    <p>**Database & Spatial Logic:** Engineered a highly performant backend schema on Supabase and PostgreSQL, implementing complex real-time notification streams and geolocation proximity query logic.</p>
+    <p>**Edge Infrastructure:** Authored and deployed serverless Deno Edge Functions and automated webhooks to decouple heavy background calculation workflows from user-facing clients, maintaining zero UI blocking.</p>
+    <p>**Data Pipeline Automation:** Integrated Google Maps API infrastructure to dynamically resolve, clean, and cache spatial metadata efficiently to reduce downstream billing overhead.</p>
+  </motion.div>
                   )}
                 </AnimatePresence>
               </motion.div>
